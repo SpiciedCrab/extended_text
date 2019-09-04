@@ -126,6 +126,9 @@ class _TextSelectionDemoState extends State<TextSelectionDemo> {
                                           launch("mailto:zmtzawqlp@live.com");
                                         }
                                       },
+                                      onTextTapped: (c){
+                                        print(c);
+                                      },
                                       specialTextSpanBuilder:
                                           MySpecialTextSpanBuilder(),
                                       //overflow: ExtendedTextOverflow.ellipsis,

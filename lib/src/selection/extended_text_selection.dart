@@ -88,22 +88,25 @@ class ExtendedTextSelection extends StatefulWidget {
 
   final TextSelectionControls textSelectionControls;
 
+  final Function(String) onTapText;
+
   ExtendedTextSelection(
       {this.onTap,
-      this.softWrap,
-      this.locale,
-      this.textDirection,
-      this.textAlign,
-      this.maxLines,
-      this.textScaleFactor,
-      this.overflow,
-      this.text,
-      this.overFlowTextSpan,
-      this.selectionColor,
-      this.dragStartBehavior,
-      this.data,
-      this.textSelectionControls,
-      Key key})
+        this.softWrap,
+        this.locale,
+        this.textDirection,
+        this.textAlign,
+        this.maxLines,
+        this.textScaleFactor,
+        this.overflow,
+        this.text,
+        this.overFlowTextSpan,
+        this.selectionColor,
+        this.dragStartBehavior,
+        this.data,
+        this.textSelectionControls,
+        this.onTapText,
+        Key key})
       : super(key: key);
 
   @override
@@ -234,17 +237,22 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
   }
 
   void _handleSingleTapUp(TapUpDetails details) {
-    switch (Theme.of(context).platform) {
-      case TargetPlatform.iOS:
-        _renderParagraph.selectWordEdge(cause: SelectionChangedCause.tap);
-        break;
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-        _renderParagraph.selectPosition(cause: SelectionChangedCause.tap);
-        break;
+    if(widget.onTapText != null) {
+      _renderParagraph.selectWord(cause: SelectionChangedCause.tap);
+      String selected = _value.selection.textInside(_value.text);
+      widget.onTapText(selected);
+    } else {
+      switch (Theme.of(context).platform) {
+        case TargetPlatform.iOS:
+          _renderParagraph.selectWordEdge(cause: SelectionChangedCause.tap);
+          break;
+        case TargetPlatform.android:
+        case TargetPlatform.fuchsia:
+          _renderParagraph.selectPosition(cause: SelectionChangedCause.tap);
+          break;
+      }
+      if (widget.onTap != null) widget.onTap();
     }
-
-    if (widget.onTap != null) widget.onTap();
   }
 
   void _handleSingleLongTapStart(LongPressStartDetails details) {
@@ -299,9 +307,9 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
   }
 
   void _handleMouseDragSelectionUpdate(
-    DragStartDetails startDetails,
-    DragUpdateDetails updateDetails,
-  ) {
+      DragStartDetails startDetails,
+      DragUpdateDetails updateDetails,
+      ) {
     _renderParagraph.selectPositionAt(
       from: startDetails.globalPosition,
       to: updateDetails.globalPosition,
@@ -419,9 +427,9 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
   @override
   bool get selectAllEnabled =>
       textEditingValue.text.isNotEmpty &&
-      !(textEditingValue.selection.baseOffset == 0 &&
-          textEditingValue.selection.extentOffset ==
-              textEditingValue.text.length);
+          !(textEditingValue.selection.baseOffset == 0 &&
+              textEditingValue.selection.extentOffset ==
+                  textEditingValue.text.length);
 
   /// Toggle the toolbar when a selection handle is tapped.
   void _handleSelectionHandleTapped() {

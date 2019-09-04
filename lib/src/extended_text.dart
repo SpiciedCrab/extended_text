@@ -30,6 +30,7 @@ class ExtendedText extends StatelessWidget {
       this.overFlowTextSpan,
       this.selectionEnabled: false,
       this.onTap,
+      this.onTextTapped,
       this.selectionColor,
       this.dragStartBehavior: DragStartBehavior.start,
       this.textSelectionControls})
@@ -56,6 +57,7 @@ class ExtendedText extends StatelessWidget {
       this.selectionEnabled: false,
       this.onTap,
       this.selectionColor,
+      this.onTextTapped,
       this.dragStartBehavior: DragStartBehavior.start,
       this.textSelectionControls})
       : assert(textSpan != null),
@@ -184,6 +186,11 @@ class ExtendedText extends StatelessWidget {
   /// {@macro flutter.dart:ui.text.TextWidthBasis}
   final TextWidthBasis textWidthBasis;
 
+
+  ///Harly added: to callback the text which you selected on tap.
+  ///This will disable the onTap callback on default.
+  final Function(String) onTextTapped;
+
 //  ExtendedRenderEditable get _renderEditable =>
 //      _editableTextKey.currentState.renderEditable;
   @override
@@ -230,6 +237,7 @@ class ExtendedText extends StatelessWidget {
             textScaleFactor ?? MediaQuery.textScaleFactorOf(context),
         maxLines: maxLines ?? defaultTextStyle.maxLines,
         text: innerTextSpan,
+        onTapText: onTextTapped,
         overFlowTextSpan: effectiveOverFlowTextSpan,
         selectionColor: selectionColor ?? Theme.of(context).textSelectionColor,
         dragStartBehavior: dragStartBehavior,
