@@ -240,7 +240,7 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
     if(widget.onTapText != null) {
       _renderParagraph.selectWord(cause: SelectionChangedCause.tap);
       String selected = _value.selection.textInside(_value.text);
-      Future.delayed(Duration(milliseconds: 1000)).then((c) => clearSelection()) ;
+      Future.delayed(Duration(milliseconds: 500)).then((c) => clearSelection()) ;
       widget.onTapText(selected);
     } else {
       switch (Theme.of(context).platform) {
