@@ -238,6 +238,11 @@ class ExtendedTextSelectionState extends State<ExtendedTextSelection>
 
   void _handleSingleTapUp(TapUpDetails details) {
     if(widget.onTapText != null) {
+      var splited = _value.text.substring(_value.selection.start,_value.selection.end);
+      if(splited.trim().isEmpty) {
+        return;
+      }
+
       _renderParagraph.selectWord(cause: SelectionChangedCause.tap);
       String selected = _value.selection.textInside(_value.text);
       Future.delayed(Duration(milliseconds: 500)).then((c) => clearSelection()) ;
